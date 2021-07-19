@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link href="css/layout.css" rel="stylesheet">
+    <link href="css/responsive.css" rel="stylesheet">
+    <link href="css/font-awesome/css/fontawesome.min.css" rel="stylesheet">
+    <link href="css/font-awesome/css/brands.css" rel="stylesheet">
+    <link href="css/font-awesome/css/solid.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">header <i class="fas fa-camera"></i><i class="fas fa-adjust"></i></div>
+        <div id="menu" style="z-index: 10;">
+            <button><i class="fas fa-bars"></i></button>
+            <ul>
+                <li id="showAllProduct"><a href="#">Trang chu</a></li>
+                <li><a href="#">Gioi thieu</a></li>
+                <li class="has-sub"><a href="javascript:void()">San pham</a>
+                    <ul>
+                        <li id="clothing" value='1'><a href="#">men's clothing</a></li>
+                        <li class="has-sub" id="clothing" value='2'><a href="#">jewelery</a>
+                        <li class="has-sub" id="clothing" value='3'><a href="#">electronics</a>
+                            <!-- <ul>
+                                <li><a href="#">Samsung</a></li>
+                                <li><a href="#">Iphone</a></li>
+                                <li><a href="#">Xiaomi</a></li>
+                            </ul> -->
+                        </li>
+                        <li id="clothing"><a href="#" value='4'>women's clothing</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Huong dan</a></li>
+                <li class="has-sub"><a href="#">Lien he</a>
+                </li>
+            </ul>
+        </div>
+        <div class="loading">
+            <img src="images/gif-leaf-loading-gif-MAIN.gif" height="100" alt="">
+        </div>
+        <div style="margin-left: 20px;">
+            <label for="">Search Product: </label>
+            <input type="text" name="searchProduct" id="searchProduct" class="form-group">
+            <button class="btn btn-primary btnSearch">Search</button>
+        </div>
+        <div id="left" class="col-s-3 col-2">
+            <label><input name="sort" value="1" class="sort" type="radio"> Price Ascending </label><br>
+            <label><input name="sort" value="2" class="sort" type="radio"> Price Descending </label><br>
+            <label><input name="sort" value="3" class="sort" type="radio"> Name Ascending </label><br>
+            <label><input name="sort" value="4" class="sort" type="radio"> Name Descending </label><br>
+            <select name="sort">
+                <optgroup label="Price">
+                    <option value="0">...</option>
+                    <option value="1">Ascending</option>
+                    <option value="2">Descending</option>
+                </optgroup>
+                <optgroup label="Name">
+                    <option value="3">Ascending</option>
+                    <option value="4">Descending</option>
+                </optgroup>
+            </select> <br>
+            <select name="filter" class="filter">
+                <option value="0">...</option>
+                <option value="1">Price &lt;= 10 Mil</option>
+                <option value="2">Price between 10 Mil and 20 Mil</option>
+                <option value="3">Price between 20 Mil and 40 Mil</option>
+                <option value="4">Price between 40 Mil and 100 Mil</option>
+                <option value="5">Price &gt;= 100 Mil</option>
+            </select>
+        </div>
+        <div id="main" class="col-s-9 col-8">
+        </div>
+        <style>
+            .modal-content {
+                width: 160%;
+                margin-left: -30%;
+            }
+
+            .cart-shop:hover {
+                color: sandybrown;
+                transform: scale(1.1);
+                cursor: pointer;
+            }
+
+            .total-count {
+                position: absolute;
+                background-color: slateblue;
+                color: white;
+                border-radius: 50%;
+                padding: 5px;
+                margin-left: 40px;
+                margin-top: -70px;
+                display: none;
+            }
+            .sort::after {
+                position: relative;
+                margin-left: 170px;
+                top: -10px;
+                content: '\1F627';
+                font-size: 25px;
+                float: left;
+            }
+
+            .active::after {
+                content: '\1F62C';
+                font-size: 25px;
+                
+                animation: rotate 0.5s linear infinite;
+            }
+
+            @keyframes rotate {
+                from {
+                    transform: rotate(0);
+                }
+
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+        <div id="right" class="col-s-12 col-2">
+            <div style="font-size: 40px;color: red;" data-toggle="modal" data-target="#card" data-backdrop="static">
+                <i class="fas fa-cart-plus cart-shop"></i>
+                <span class="total-count" style="font-weight: bold; font-size: 20px;position: absolute;"></span>
+            </div>
+            <button style="margin-left: 10px;" class="btn btn-danger clear-cart">Clear Cart</button>
+        </div>
+        <div id="footer">footer</div>
+    </div>
+    <!-- Modal Cart -->
+
+    <div class="modal fade" id="card" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="show-card">
+
+                        <div><span style="color: red;font-weight: bold;" class="total-card"></span></div>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Order Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Detail -->
+    <div class="modal fade" id="detailItem" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div style="display: flex;">
+                        <div class="imageItem"></div>
+                        <div style="margin-left: 50px;">
+                            <span style="color: red;font-weight: bold;">Item Name:</span>
+                            <div class="titleItem"></div>
+                            <span style="color: red;font-weight: bold;">Description:</span>
+                            <div class="descriptionItem"></div>
+                            <span style="color: red;font-weight: bold;">Category:</span>
+                            <div class="categoryItem"></div>
+                            <span style="color: red;font-weight: bold;">Price:</span>
+                            <div class="priceItem"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let firstClick = true;
+        //Chọn button trong #menu
+        let menuBtn = document.querySelector('#menu button');
+
+        //Khi click vào button sẽ gọi hàm toggleMenu
+        menuBtn.addEventListener('click', toggleMenu);
+
+        //Hàm xử lý sự kiện khi click vào button
+        function toggleMenu() {
+            //Ẩn hiện menu, thay đổi label của button
+            let menu = document.querySelector('#menu ul');
+            if (menu.className === 'show') {
+                menu.className = 'hide';
+                menuBtn.firstChild.className = 'fas fa-bars';
+            }
+            else {
+                menu.className = 'show';
+                menuBtn.firstChild.className = 'fas fa-window-close';
+            }
+        }
+        //Xử lý menu bị ẩn khi resize từ mobile -> desktop
+        window.addEventListener('resize', fixHiddenMenu);
+        function fixHiddenMenu() {
+            //console.log(window.outerWidth + ',' +window.innerWidth);
+            if (window.innerWidth >= 768) {
+                let menu = document.querySelector('#menu ul');
+                menu.classList.remove('hide');
+            }
+        }
+
+        //Show products
+        productArr = [];
+        let url = "https://fakestoreapi.com/products?limit=20";
+        $('.loading').show(500);
+        fetch(url)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                initData(data);
+            })
+            .catch(function (err) {
+                console.log(err);
+            })
+        // console.log(productArr)
+        function initData(data) {
+            // Load xong data tu API       
+            productArr = data;
+            // Dong modal
+            $('.loading').hide();
+            filteredProduct = productArr;
+            //show products by default
+            displayProduct(productArr);
+            console.log(productArr);
+        }
+
+        /* Functional programming
+        temp1 = filterProduct(productArr, filterBy);
+        temp2 = sortProduct(temp1, sortBy);
+        displayProduct(temp2);
+        displayProduct(sortProduct(filterProduct(productArr, filterBy), sortBy));
+        */
+
+        /* Hàm hiển thị sản phẩm trong #main
+        * productArr: Mảng sản phẩm cần hiển thị
+        */
+        var card = [];
+        function displayProduct(productArr) {
+            let output = '';
+            productArr.forEach((product, index) => {
+                // //Literal template
+                output += `<div class="col-s-6 col-4 col-l-4">
+                <div class="product">
+                    <h2 class = "productTitle">${product.title.toLowerCase()}</h2>
+                    <img src="${product.image}" alt="">
+                    <div>${product.price.toLocaleString()} $</div>`;
+                //${product.isHot?'<span>Hot</span>':''}
+                output += `<button data-index="${index}" class = "addCart btn btn-success" value = "${product.id}">Add to Cart</button>
+                            <button data-index="${index}" class = "detail btn btn-info" data-toggle="modal" data-target="#detailItem" data-backdrop="static" value = "${product.id}">Detail</button>
+                    </div>
+                </div>`;
+                // console.log(product.category)
+            });
+            //output to #main
+            document.querySelector('#main').innerHTML = output;
+            $(".addCart").click(addCart);
+            $(".detail").click(detailItem);
+        }
+
+        //thêm vào giỏ hàng
+        function addCart() {
+            let url = 'https://fakestoreapi.com/products/' + this.value + '';
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    data.quantity = 1;
+                    // let x;
+                    for (let index = 0; index < card.length; index++) {
+                        if (card[index].id == data.id) {
+                            card[index].quantity++;
+                            displayCard();
+                            return;
+                        }
+                    }
+                    card.push(data);
+                    $('.total-count').css("display", "block");
+                    displayCard();
+                    // console.log(card);
+                })
+        }
+        // Hiển thị giỏ hàng
+        function displayCard() {
+            let output = '';
+            let totalCard = 0;
+            let totalQty = 0;
+            card.forEach((element, index) => {
+                output += `
+                    <tr  style="border-bottom: 1px solid; height:150px">
+                        <td><img src = '${element.image}' style = "width:70px"></td>  
+                        <td style = "font-weight:bold;">${element.title}</td>  
+                        <td style = "font-weight:bold;color:red">${element.price}</td> 
+                        <td><div class = "input-group"><button data-index = "${index}" class = "minus-item btn btn-primary">-</button>
+                        <input name = "quantity" type = "number" min = "1"  class = "item-count form-control" data-index = "${index}" value = "${element.quantity}"/>
+                        <button data-index = "${index}" class = "plus-item btn btn-primary">+</button></div></td>
+                        <td><button data-index = "${index}" class='delete-item btn btn-danger'>X</button></td>
+                    </tr>`;
+                $(".show-card").html(output);
+                totalQty += element.quantity;
+                totalCard += element.price * element.quantity;
+            });
+            $('input[name = quantity]').change(updateQty);
+            $('.total-count').html(totalQty);
+            $('.total-card').html('Total Price: ' + totalCard.toFixed(2) + ' $');
+            $('.delete-item').click(removeItem);
+            $('.plus-item').click(ascQty);
+            $('.minus-item').click(descQty);
+            // console.log(card);
+        }
+        // Detail Item(Cart)
+        function detailItem() {
+            let url = 'https://fakestoreapi.com/products/' + this.value + '';
+            fetch(url)
+                .then((res) => res.json())
+                .then((data) => {
+                    $('.imageItem').html('<img src = ' + data.image + ' style = "width:200px">');
+                    $('.titleItem').html(data.title);
+                    $('.descriptionItem').html(data.description);
+                    $('.categoryItem').html(data.category);
+                    $('.priceItem').html(data.price + ' $');
+                })
+        }
+
+        //Clear Cart
+        $('.clear-cart').click(() => {
+            card = [];
+            $('.show-card').html('');
+            $('.total-card').html('')
+            $('.total-count').css('display', 'none')
+            displayCart();
+        })
+        function updateQty() {
+            // update số lượng
+            let index = this.index.quantity;
+            card[index].quantity = parseInt(this.value);
+            displayCard();
+            // Change bill
+            let sum = 0;
+            card.forEach((element) => {
+                sum += (parseFloat(element.price * element.quantity))
+            });
+            $('.total-card').html('Total Price: ' + sum.toFixed(2) + ' $')
+        }
+        function removeItem() {
+            let index = this.dataset.index;
+            card.splice(index, 1);
+            if (card.length == 0) {
+                card = [];
+                $('.show-card').html();
+            }
+            displayCard();
+        }
+        function ascQty() {
+            let index = this.dataset.index;
+            card[index].quantity++;
+            displayCard();
+        }
+        function descQty() {
+            let index = this.dataset.index;
+            if (card[index].quantity >= 1) {
+                card[index].quantity--;
+                displayCard();
+            }
+        }
+
+        //Xử lý sự kiện click trên radio button sort
+        document.querySelectorAll('input.sort').forEach(function (element) {
+            element.addEventListener('click', function () {
+                //Sort product                
+                sortProduct(this.value);
+                //Show product
+                displayProduct(filteredProduct);
+                //Update comboBox sort (selected)
+
+            });
+        });
+        //Xử lý sự kiện click trên comboBox
+        document.querySelector('select[name="sort"]').addEventListener('change', function () {
+            //Sort product 
+            sortProduct(this.value);
+            //Show product
+            displayProduct(productArr);
+            //Update radio list (checked)
+        });
+        /*Hàm sắp xếp sản phẩm theo tên hoặc giá Asc/Desc
+        * sortBy: Kiểu sắp xếp 1: Giá Asc, 2: Giá Desc, 3: Name Asc, 4: Name Desc
+        */
+        function sortProduct(sortBy) {
+            //Sắp xếp mảng productArr tăng dần theo giá sản phẩm
+            if (sortBy == 1)
+                filteredProduct.sort(function (a, b) {
+                    return a.price - b.price;
+                });
+            //Sắp xếp mảng productArr giảm dần theo giá sản phẩm
+            if (sortBy == 2)
+                filteredProduct.sort(function (a, b) {
+                    return b.price - a.price;
+                });
+
+            //Your code goes here. Please!!!
+            //Sắp xếp mảng productArr tăng dần theo tên sản phẩm
+            if (sortBy == 3)
+                filteredProduct.sort(function (a, b) {
+                    if (a.title.toLowerCase() < b.title.toLowerCase())
+                        return -1;
+                    if (a.title.toLowerCase() > b.title.toLowerCase())
+                        return 1;
+                    return 0;
+                });
+            //Sắp xếp mảng productArr giảm dần theo tên sản phẩm
+            if (sortBy == 4)
+                filteredProduct.sort(function (a, b) {
+                    if (a.title.toLowerCase() > b.title.toLowerCase())
+                        return -1;
+                    if (a.title.toLowerCase() < b.title.toLowerCase())
+                        return 1;
+                    return 0;
+                });
+        }
+        document.querySelector('select[name="filter"]').addEventListener('change', function () {
+            filteredProduct = productArr;
+            if (this.value == 1)// Price <= 10 Mil
+            {
+                filteredProduct = productArr.filter(function (product) {
+                    return product.price <= 10;
+                })
+            }
+            if (this.value == 2)// 10 Mil <= Price <= 20 Mil
+            {
+                filteredProduct = productArr.filter(function (product) {
+                    return (product.price >= 10 && product.price <= 20);
+                })
+            }
+            if (this.value == 3)// 20 Mil <= Price <= 40 Mil
+            {
+                filteredProduct = productArr.filter(function (product) {
+                    return (product.price >= 20 && product.price <= 40);
+                })
+            }
+            if (this.value == 4)// 40 Mil <= Price <= 100 Mil
+            {
+                filteredProduct = productArr.filter(function (product) {
+                    return (product.price >= 40 && product.price <= 100);
+                })
+            }
+            if (this.value == 5)// Price >= 100 Mil
+            {
+                filteredProduct = productArr.filter(function (product) {
+                    return product.price >= 100;
+                })
+            }
+            //console.log(filteredProduct);
+            displayProduct(filteredProduct);
+        });
+        // Search product
+        const searchProduct = document.querySelector("#searchProduct");
+        // var productAll = document.querySelectorAll('.product');
+
+        searchProduct.addEventListener('keyup', (e) => {
+            let searchString = e.target.value.toLowerCase();
+            // console.log(e.target.value);
+            filteredProduct = productArr.filter(product => {
+                return (product.title.toLowerCase().includes(searchString));
+            });
+            // console.log(filteredProduct);
+            displayProduct(filteredProduct);
+        });
+        // Filter Product
+        let filterCategory = document.querySelectorAll('ul #clothing');
+        filterCategory.forEach((productCategory, index) => {
+            productCategory.addEventListener('click', function () {
+
+                var listFilter = this.value;
+                console.log(listFilter)
+                filteredProduct = productArr.filter(product => {
+                    if (listFilter == 1) {
+                        return (product.category == "men's clothing");
+                    } else if (listFilter == 2) {
+                        return (product.category == "jewelery");
+                    } else if (listFilter == 3) {
+                        return (product.category == "electronics");
+                    } else {
+                        return (product.category == "women's clothing");
+                    }
+                })
+                // console.log(filteredProduct);
+                displayProduct(filteredProduct);
+            });
+            // console.log(filterCategory.length);
+        })
+
+
+        // showAllProduct(Trang chu)
+        $('#showAllProduct').click(function () {
+            displayProduct(productArr);
+        })
+        // Animation sort
+        var rotateItem = document.querySelectorAll('.sort');
+        rotateItem.forEach((sortItem) => {
+            sortItem.addEventListener('click', function () {
+                this.classList.toggle("active");
+            })
+        });
+    </script>
+</body>
+
+</html>
